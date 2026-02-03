@@ -1,5 +1,4 @@
-﻿using IsiGatewayProcess.Repositories;
-using IsiGatewayProcess.Services;
+﻿using IsiGatewayProcess;
 using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 // ✅ Swagger services
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ITimeRepository, TimeRepository>();
-builder.Services.AddScoped<IHealthService, HealthService>();
+builder.Services.AddIsiGatewayProcess();
 
 var app = builder.Build();
 
