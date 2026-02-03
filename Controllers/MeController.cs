@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using IsiGatewayProcess.Filters;
 using IsiGatewayProcess.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace IsiGatewayProcess.Controllers;
 
 [ApiController]
 [Route("api/v1/me")]
+[JWTAuth]
 public class MeController : ControllerBase
 {
     private readonly IPermissionService _permissionService;
