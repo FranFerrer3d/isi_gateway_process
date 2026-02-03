@@ -10,4 +10,5 @@ public interface IUserRepository
     Task<UserDto> CreateAsync(UserDto dto);
     Task<bool> UpdateAsync(Guid id, UserDto dto);
     Task<bool> DeleteAsync(Guid id);
+    Task<UserDto?> FindByUserNameOrEmailAsync(string userNameOrEmail);
 }
