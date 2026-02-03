@@ -1,3 +1,7 @@
 namespace IsiGatewayProcess.DTOs;
 
-public sealed record HealthResponseDto(string Status, DateTimeOffset Timestamp);
+public record class HealthResponseDto
+{
+    public string Status { get; init; } = "OK";
+    public DateTimeOffset CheckedAt { get; init; } = DateTimeOffset.UtcNow;
+}

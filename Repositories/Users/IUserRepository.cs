@@ -7,8 +7,10 @@ public interface IUserRepository
     Task<UserDto?> GetAsync(Guid id);
     Task<IReadOnlyList<UserDto>> ListAsync(int skip, int take);
     Task<int> CountAsync();
-    Task<UserDto> CreateAsync(UserDto dto);
-    Task<bool> UpdateAsync(Guid id, UserDto dto);
+    Task<UserDto> AddAsync(UserDto user);
+    Task<bool> UpdateAsync(UserDto user);
     Task<bool> DeleteAsync(Guid id);
     Task<UserDto?> FindByUserNameOrEmailAsync(string userNameOrEmail);
+    Task<bool> AnyForOrganizationAsync(Guid organizationId);
+    Task<bool> AnyForLocationAsync(Guid locationId);
 }
