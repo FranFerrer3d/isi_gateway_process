@@ -38,7 +38,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddIsiGatewayProcess();
 
 var app = builder.Build();
-
+ 
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Pre"))
 {
     app.UseSwagger();
