@@ -1,12 +1,9 @@
-﻿using System.Text;
-using IsiGatewayProcess;
+﻿using IsiGatewayProcess;
+using IsiGatewayProcess.Middlewares;
 using IsiGatewayProcess.Options;
 using IsiGatewayProcess.Repositories;
 using IsiGatewayProcess.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.IdentityModel.Tokens;
+using IsiGatewayProcess.Services.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,29 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
-var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>() ?? new JwtOptions();
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = jwtOptions.Issuer,
-            ValidateAudience = true,
-            ValidAudience = jwtOptions.Audience,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey)),
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromSeconds(30),
-        };
-    });
-builder.Services.AddAuthorization(options =>
-{
-    options.FallbackPolicy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
-});
+builder.Services.AddSingleton<IJwtValidator, JwtValidator>();
 
 builder.Services.AddIsiGatewayProcess();
 
@@ -55,9 +30,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Pre"))
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseMiddleware<JwtAuthMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

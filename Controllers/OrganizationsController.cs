@@ -1,6 +1,7 @@
 using IsiGatewayProcess.DTOs.Common;
 using IsiGatewayProcess.DTOs.Organizations;
 using IsiGatewayProcess.DTOs.Organizations.Requests;
+using IsiGatewayProcess.Filters;
 using IsiGatewayProcess.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace IsiGatewayProcess.Controllers;
 
 [ApiController]
 [Route("api/v1/organizations")]
+[JWTAuth]
 public class OrganizationsController : ControllerBase
 {
     private readonly IOrganizationService _service;

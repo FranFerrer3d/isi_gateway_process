@@ -1,6 +1,7 @@
 using IsiGatewayProcess.DTOs.Common;
 using IsiGatewayProcess.DTOs.RolePermissions;
 using IsiGatewayProcess.DTOs.RolePermissions.Requests;
+using IsiGatewayProcess.Filters;
 using IsiGatewayProcess.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace IsiGatewayProcess.Controllers;
 
 [ApiController]
 [Route("api/v1/role-permissions")]
+[JWTAuth]
 public class RolePermissionsController : ControllerBase
 {
     private readonly IRolePermissionService _service;

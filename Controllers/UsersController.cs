@@ -1,6 +1,7 @@
 using IsiGatewayProcess.DTOs.Common;
 using IsiGatewayProcess.DTOs.Users;
 using IsiGatewayProcess.DTOs.Users.Requests;
+using IsiGatewayProcess.Filters;
 using IsiGatewayProcess.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace IsiGatewayProcess.Controllers;
 
 [ApiController]
 [Route("api/v1/users")]
+[JWTAuth]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _service;

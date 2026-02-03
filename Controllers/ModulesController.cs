@@ -1,6 +1,7 @@
 using IsiGatewayProcess.DTOs.Common;
 using IsiGatewayProcess.DTOs.Modules;
 using IsiGatewayProcess.DTOs.Modules.Requests;
+using IsiGatewayProcess.Filters;
 using IsiGatewayProcess.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace IsiGatewayProcess.Controllers;
 
 [ApiController]
 [Route("api/v1/modules")]
+[JWTAuth]
 public class ModulesController : ControllerBase
 {
     private readonly IModuleService _service;

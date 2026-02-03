@@ -1,6 +1,7 @@
 using IsiGatewayProcess.DTOs.Actions;
 using IsiGatewayProcess.DTOs.Actions.Requests;
 using IsiGatewayProcess.DTOs.Common;
+using IsiGatewayProcess.Filters;
 using IsiGatewayProcess.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace IsiGatewayProcess.Controllers;
 
 [ApiController]
 [Route("api/v1/actions")]
+[JWTAuth]
 public class ActionsController : ControllerBase
 {
     private readonly IActionService _service;
