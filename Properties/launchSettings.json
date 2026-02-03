@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "IsiGatewayProcess": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:55963;http://localhost:55964"
+    }
+  }
+}
