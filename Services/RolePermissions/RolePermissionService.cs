@@ -2,7 +2,6 @@ using IsiGatewayProcess.DTOs.Common;
 using IsiGatewayProcess.DTOs.RolePermissions;
 using IsiGatewayProcess.DTOs.RolePermissions.Requests;
 using IsiGatewayProcess.Repositories;
-using IsiGatewayProcess.Services.Common;
 
 namespace IsiGatewayProcess.Services;
 
