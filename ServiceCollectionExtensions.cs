@@ -21,11 +21,16 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IActionRepository, InMemoryActionRepository>();
         services.AddScoped<IActionService, ActionService>();
         services.AddScoped<IUserRepository, InMemoryUserRepository>();
+        services.AddScoped<IUserCredentialRepository, InMemoryUserCredentialRepository>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserRoleRepository, InMemoryUserRoleRepository>();
         services.AddScoped<IUserRoleService, UserRoleService>();
         services.AddScoped<IUserModuleAccessRepository, InMemoryUserModuleAccessRepository>();
         services.AddScoped<IUserModuleAccessService, UserModuleAccessService>();
+        services.AddScoped<IRefreshTokenRepository, InMemoryRefreshTokenRepository>();
+        services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IStorageRepository, InMemoryStorageRepository>();
         services.AddScoped<IStorageService, StorageService>();
         services.AddScoped<IAreaRepository, InMemoryAreaRepository>();

@@ -2,6 +2,7 @@ using IsiGatewayProcess.DTOs.Common;
 using IsiGatewayProcess.DTOs.Users;
 using IsiGatewayProcess.DTOs.Users.Requests;
 using IsiGatewayProcess.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IsiGatewayProcess.Controllers;
@@ -60,5 +61,23 @@ public class UserController : ControllerBase
     {
         var deleted = await _service.DeleteAsync(id);
         return deleted ? NoContent() : NotFound();
+    }
+
+    [Authorize]
+    [HttpPost("{id:guid}/password")]
+    public async Task<IActionResult> ChangePassword(Guid id, ChangePasswordRequest request)
+    {
+        var result = await _service.ChangePasswordAsync(id, request);
+        if (result is null)
+        {
+            return NotFound();
+        }
+
+        if (result is false)
+        {
+            return BadRequest();
+        }
+
+        return NoContent();
     }
 }
