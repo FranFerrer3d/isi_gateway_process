@@ -43,12 +43,12 @@ public class RolePermissionsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> List([FromQuery] int page = 1, [FromQuery] int pageSize = 25)
-    {
-        PagedResult<RolePermissionDto> result = await _service.ListAsync(page, pageSize);
-        return Ok(result);
-    }
+    //[HttpGet]
+    //public async Task<IActionResult> List([FromQuery] int page = 1, [FromQuery] int pageSize = 25)
+    //{
+    //    PagedResult<RolePermissionDto> result = await _service.ListAsync(page, pageSize);
+    //    return Ok(result);
+    //}
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdateRolePermissionRequest request)

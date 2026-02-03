@@ -26,14 +26,14 @@ public class RolePermissionService : IRolePermissionService
 
     public Task<RolePermissionDto?> GetAsync(Guid id) => _rolePermissionRepository.GetAsync(id);
 
-    public async Task<PagedResult<RolePermissionDto>> ListAsync(int page, int pageSize)
-    {
-        var (normalizedPage, normalizedPageSize) = PagingHelper.Normalize(page, pageSize);
-        var skip = (normalizedPage - 1) * normalizedPageSize;
-        var items = await _rolePermissionRepository.ListAsync(skip, normalizedPageSize);
-        var total = await _rolePermissionRepository.CountAsync();
-        return new PagedResult<RolePermissionDto>(items, normalizedPage, normalizedPageSize, total);
-    }
+    //public async Task<PagedResult<RolePermissionDto>> ListAsync(int page, int pageSize)
+    //{
+    //    var (normalizedPage, normalizedPageSize) = PagingHelper.Normalize(page, pageSize);
+    //    var skip = (normalizedPage - 1) * normalizedPageSize;
+    //    var items = await _rolePermissionRepository.ListAsync(skip, normalizedPageSize);
+    //    var total = await _rolePermissionRepository.CountAsync();
+    //    return new PagedResult<RolePermissionDto>(items, normalizedPage, normalizedPageSize, total);
+    //}
 
     public async Task<RolePermissionDto> CreateAsync(CreateRolePermissionRequest request)
     {
