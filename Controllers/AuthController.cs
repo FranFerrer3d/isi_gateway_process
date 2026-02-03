@@ -1,4 +1,5 @@
 using IsiGatewayProcess.DTOs.Auth;
+using IsiGatewayProcess.Filters;
 using IsiGatewayProcess.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,7 @@ public class AuthController : ControllerBase
         return response is null ? Unauthorized() : Ok(response);
     }
 
-    [Authorize]
+    [JWTAuth]
     [HttpPost("revoke")]
     public async Task<IActionResult> Revoke(RevokeRequest request)
     {
