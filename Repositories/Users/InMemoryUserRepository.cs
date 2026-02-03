@@ -5,16 +5,27 @@ namespace IsiGatewayProcess.Repositories;
 
 public class InMemoryUserRepository : InMemoryRepositoryBase<UserDto>, IUserRepository
 {
-    public Task<UserDto> CreateAsync(UserDto dto)
-    {
-        return AddAsync(dto.Id, dto);
-    }
+    public Task<UserDto> AddAsync(UserDto user) => AddAsync(user.Id, user);
+
+    public Task<bool> UpdateAsync(UserDto user) => UpdateAsync(user.Id, user);
 
     public Task<UserDto?> FindByUserNameOrEmailAsync(string userNameOrEmail)
     {
-        var match = Store.Values.FirstOrDefault(user =>
-            string.Equals(user.UserName, userNameOrEmail, StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(user.Email, userNameOrEmail, StringComparison.OrdinalIgnoreCase));
-        return Task.FromResult(match);
+        var user = Store.Values.FirstOrDefault(item =>
+            string.Equals(item.UserName, userNameOrEmail, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(item.Email, userNameOrEmail, StringComparison.OrdinalIgnoreCase));
+        return Task.FromResult(user);
+    }
+
+    public Task<bool> AnyForOrganizationAsync(Guid organizationId)
+    {
+        var exists = Store.Values.Any(item => item.OrganizationId == organizationId);
+        return Task.FromResult(exists);
+    }
+
+    public Task<bool> AnyForLocationAsync(Guid locationId)
+    {
+        var exists = Store.Values.Any(item => item.LocationId == locationId);
+        return Task.FromResult(exists);
     }
 }
