@@ -4,11 +4,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.12.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
-  </ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+	  <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.12.1" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
+
+	  <!-- ✅ Swagger completo -->
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+	</ItemGroup>
+
 </Project>

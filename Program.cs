@@ -4,49 +4,67 @@ using IsiGatewayProcess.Options;
 using IsiGatewayProcess.Repositories;
 using IsiGatewayProcess.Services;
 using IsiGatewayProcess.Services.Security;
+
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Controllers + OpenAPI explorer
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// ✅ Swagger services
+// Swagger
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "IsiGatewayProcess",
-        Version = "v1",
-    });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "IsiGatewayProcess", Version = "v1" });
+    options.CustomSchemaIds(t => t.FullName);
 
-    var jwtSecurityScheme = new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Ingresá el token JWT con el prefijo 'Bearer '.",
-    };
+        Description = "Introduce: Bearer {token}"
+    });
 
-    options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+
+    // Requirement usando el tipo correcto: OpenApiSecuritySchemeReference
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
-            jwtSecurityScheme,
-            Array.Empty<string>()
-        },
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new List<string>()
+        }
     });
+
+
 });
 
+
+// Options + DI
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddSingleton<IJwtValidator, JwtValidator>();
 
 builder.Services.AddIsiGatewayProcess();
 
 var app = builder.Build();
- 
+
+// Errores detallados en Development
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+// Swagger en Development o Pre
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Pre"))
 {
     app.UseSwagger();
@@ -57,11 +75,18 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Pre"))
 }
 
 app.UseHttpsRedirection();
+
+// Middleware JWT (si quieres excluir swagger dentro del middleware, filtra por path allí)
 app.UseMiddleware<JwtAuthMiddleware>();
 
+// Map Controllers
+app.MapControllers();
+
+// Seed solo en Development
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
+
     var organizationRepository = scope.ServiceProvider.GetRequiredService<IOrganizationRepository>();
     var locationRepository = scope.ServiceProvider.GetRequiredService<ILocationRepository>();
     var roleRepository = scope.ServiceProvider.GetRequiredService<IRoleRepository>();
@@ -144,11 +169,10 @@ if (app.Environment.IsDevelopment())
             RegistrationDate = DateTimeOffset.UtcNow,
             DeregistrationDate = null,
         };
+
         var created = await userRepository.AddAsync(adminUser);
         await credentialRepository.SetPasswordHashAsync(created.Id, passwordHasher.Hash("Admin123!"));
     }
 }
 
-app.MapControllers();
-
-app.Run();
+await app.RunAsync();
