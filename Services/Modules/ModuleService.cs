@@ -23,7 +23,8 @@ public class ModuleService : IModuleService
         var skip = (normalizedPage - 1) * normalizedPageSize;
         var items = await _moduleRepository.ListAsync(skip, normalizedPageSize);
         var total = await _moduleRepository.CountAsync();
-        return new PagedResult<ModuleDto>(items, normalizedPage, normalizedPageSize, total);
+        var totalPages = PagingHelper.CalculateTotalPages(total, normalizedPageSize);
+        return new PagedResult<ModuleDto>(items, normalizedPage, normalizedPageSize, total, totalPages);
     }
 
     public async Task<ModuleDto> CreateAsync(CreateModuleRequest request)

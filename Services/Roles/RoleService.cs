@@ -25,7 +25,8 @@ public class RoleService : IRoleService
         var skip = (normalizedPage - 1) * normalizedPageSize;
         var items = await _roleRepository.ListAsync(skip, normalizedPageSize);
         var total = await _roleRepository.CountAsync();
-        return new PagedResult<RoleDto>(items, normalizedPage, normalizedPageSize, total);
+        var totalPages = PagingHelper.CalculateTotalPages(total, normalizedPageSize);
+        return new PagedResult<RoleDto>(items, normalizedPage, normalizedPageSize, total, totalPages);
     }
 
     public async Task<RoleDto> CreateAsync(CreateRoleRequest request)

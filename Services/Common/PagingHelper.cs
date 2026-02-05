@@ -13,4 +13,14 @@ public static class PagingHelper
 
         return (normalizedPage, normalizedPageSize);
     }
+
+    public static int CalculateTotalPages(int totalItems, int pageSize)
+    {
+        if (pageSize <= 0)
+        {
+            return 0;
+        }
+
+        return (int)Math.Ceiling(totalItems / (double)pageSize);
+    }
 }

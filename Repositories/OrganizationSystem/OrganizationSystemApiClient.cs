@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using System.Linq;
 using IsiGatewayProcess.DTOs.Modules;
 using IsiGatewayProcess.DTOs.Organizations;
+using IsiGatewayProcess.Repositories.Common;
 
 namespace IsiGatewayProcess.Repositories.OrganizationSystem;
 
@@ -30,18 +31,9 @@ public class OrganizationSystemApiClient
 
     public async Task<IReadOnlyList<ModuleDto>> GetModulesAsync(int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        try {
-            var endpoint = $"/api/v1/ModuleList?Page={page}&PageSize={pageSize}";
-            var items = await _httpClient.GetFromJsonAsync<List<OrganizationSystemModuleDto>>(endpoint, cancellationToken);
-            return items?.Select(MapModule).ToList() ?? [];
-
-        }
-        catch(Exception ex)
-        {
-            Console.WriteLine($"Error fetching modules: {ex.Message}");
-            throw;
-        }
-       
+        var endpoint = $"/api/v1/ModuleList?Page={page}&PageSize={pageSize}";
+        var pageResult = await _httpClient.GetPagedAsync<OrganizationSystemModuleDto>(endpoint, cancellationToken);
+        return pageResult.Items.Select(MapModule).ToList();
     }
 
     public async Task<Guid> CreateModuleAsync(ModuleDto module, CancellationToken cancellationToken = default)
@@ -91,10 +83,10 @@ public class OrganizationSystemApiClient
             query += $"&deregistrated={deregistrated.Value.ToString().ToLowerInvariant()}";
         }
 
-        var items = await _httpClient.GetFromJsonAsync<List<OrganizationSystemOrganizationDto>>(
+        var pageResult = await _httpClient.GetPagedAsync<OrganizationSystemOrganizationDto>(
             $"/api/v1/OrganizationList{query}",
             cancellationToken);
-        return items?.Select(MapOrganization).ToList() ?? [];
+        return pageResult.Items.Select(MapOrganization).ToList();
     }
 
     public async Task<Guid> CreateOrganizationAsync(OrganizationDto organization, CancellationToken cancellationToken = default)
