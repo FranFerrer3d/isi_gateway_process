@@ -30,30 +30,39 @@ public class OrganizationSystemApiClient
 
     public async Task<IReadOnlyList<ModuleDto>> GetModulesAsync(int page, int pageSize, CancellationToken cancellationToken = default)
     {
-        var endpoint = $"/api/v1/ModuleList?Page={page}&PageSize={pageSize}";
-        var items = await _httpClient.GetFromJsonAsync<List<OrganizationSystemModuleDto>>(endpoint, cancellationToken);
-        return items?.Select(MapModule).ToList() ?? [];
+        try {
+            var endpoint = $"/api/v1/ModuleList?Page={page}&PageSize={pageSize}";
+            var items = await _httpClient.GetFromJsonAsync<List<OrganizationSystemModuleDto>>(endpoint, cancellationToken);
+            return items?.Select(MapModule).ToList() ?? [];
+
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error fetching modules: {ex.Message}");
+            throw;
+        }
+       
     }
 
     public async Task<Guid> CreateModuleAsync(ModuleDto module, CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.PostAsJsonAsync("/api/v1/Module", new { module = new { name = module.Name, description = module.Description } }, cancellationToken);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken) ?? Guid.Empty;
+        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken);
     }
 
     public async Task<Guid> UpdateModuleAsync(ModuleDto module, CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.PutAsJsonAsync("/api/v1/Module", new { module = new { id = module.Id, name = module.Name, description = module.Description } }, cancellationToken);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken) ?? Guid.Empty;
+        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken) ;
     }
 
     public async Task<Guid> DeleteModuleAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.DeleteAsync($"/api/v1/Module/{id}", cancellationToken);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken) ?? Guid.Empty;
+        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken);
     }
 
     public async Task<OrganizationDto?> GetOrganizationByIdAsync(Guid id, bool? deregistrated, CancellationToken cancellationToken = default)
@@ -111,7 +120,7 @@ public class OrganizationSystemApiClient
         };
         var response = await _httpClient.PostAsJsonAsync("/api/v1/Organization", payload, cancellationToken);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken) ?? Guid.Empty;
+        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken);
     }
 
     public async Task<Guid> UpdateOrganizationAsync(OrganizationDto organization, bool? deregistrated, CancellationToken cancellationToken = default)
@@ -140,14 +149,14 @@ public class OrganizationSystemApiClient
         var query = deregistrated.HasValue ? $"?deregistrated={deregistrated.Value.ToString().ToLowerInvariant()}" : string.Empty;
         var response = await _httpClient.PutAsJsonAsync($"/api/v1/Organization{query}", payload, cancellationToken);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken) ?? Guid.Empty;
+        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken);
     }
 
     public async Task<Guid> DeleteOrganizationAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.DeleteAsync($"/api/v1/Organization/{id}", cancellationToken);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken) ?? Guid.Empty;
+        return await response.Content.ReadFromJsonAsync<Guid>(cancellationToken);
     }
 
     private static ModuleDto MapModule(OrganizationSystemModuleDto module)

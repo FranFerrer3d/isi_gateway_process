@@ -9,7 +9,7 @@ namespace IsiGatewayProcess.Controllers;
 
 [ApiController]
 [Route("api/v1/modules")]
-[JWTAuth]
+//[JWTAuth]
 public class ModulesController : ControllerBase
 {
     private readonly IModuleService _service;

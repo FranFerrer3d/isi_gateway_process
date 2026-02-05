@@ -20,23 +20,23 @@ public sealed class JwtAuthMiddleware
             return;
         }
 
-        if (context.Request.Headers.TryGetValue(HeaderNames.Authorization, out var headerValue))
-        {
-            if (!TryGetBearerToken(headerValue.ToString(), out var token))
-            {
-                await WriteUnauthorizedAsync(context, "Invalid Authorization header.");
-                return;
-            }
+        //if (context.Request.Headers.TryGetValue(HeaderNames.Authorization, out var headerValue))
+        //{
+        //    if (!TryGetBearerToken(headerValue.ToString(), out var token))
+        //    {
+        //        await WriteUnauthorizedAsync(context, "Invalid Authorization header.");
+        //        return;
+        //    }
 
-            var principal = await validator.ValidateAsync(token, context.RequestAborted);
-            if (principal is null)
-            {
-                await WriteUnauthorizedAsync(context, "Invalid or expired token.");
-                return;
-            }
+        //    var principal = await validator.ValidateAsync(token, context.RequestAborted);
+        //    if (principal is null)
+        //    {
+        //        await WriteUnauthorizedAsync(context, "Invalid or expired token.");
+        //        return;
+        //    }
 
-            context.User = principal;
-        }
+        //    context.User = principal;
+        //}
 
         await _next(context);
     }
