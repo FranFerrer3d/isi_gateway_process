@@ -33,7 +33,8 @@ public class OrganizationService : IOrganizationService
         var skip = (normalizedPage - 1) * normalizedPageSize;
         var items = await _organizationRepository.ListAsync(skip, normalizedPageSize);
         var total = await _organizationRepository.CountAsync();
-        return new PagedResult<OrganizationDto>(items, normalizedPage, normalizedPageSize, total);
+        var totalPages = PagingHelper.CalculateTotalPages(total, normalizedPageSize);
+        return new PagedResult<OrganizationDto>(items, normalizedPage, normalizedPageSize, total, totalPages);
     }
 
     public async Task<OrganizationDto> CreateAsync(CreateOrganizationRequest request)

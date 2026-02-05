@@ -25,7 +25,8 @@ public class LocationService : ILocationService
         var skip = (normalizedPage - 1) * normalizedPageSize;
         var items = await _locationRepository.ListAsync(skip, normalizedPageSize);
         var total = await _locationRepository.CountAsync();
-        return new PagedResult<LocationDto>(items, normalizedPage, normalizedPageSize, total);
+        var totalPages = PagingHelper.CalculateTotalPages(total, normalizedPageSize);
+        return new PagedResult<LocationDto>(items, normalizedPage, normalizedPageSize, total, totalPages);
     }
 
     public async Task<LocationDto> CreateAsync(CreateLocationRequest request)

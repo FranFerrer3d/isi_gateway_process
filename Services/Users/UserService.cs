@@ -39,7 +39,8 @@ public class UserService : IUserService
         var skip = (normalizedPage - 1) * normalizedPageSize;
         var items = await _userRepository.ListAsync(skip, normalizedPageSize);
         var total = await _userRepository.CountAsync();
-        return new PagedResult<UserDto>(items, normalizedPage, normalizedPageSize, total);
+        var totalPages = PagingHelper.CalculateTotalPages(total, normalizedPageSize);
+        return new PagedResult<UserDto>(items, normalizedPage, normalizedPageSize, total, totalPages);
     }
 
     public async Task<UserDto> CreateAsync(CreateUserRequest request)

@@ -23,7 +23,8 @@ public class ActionService : IActionService
         var skip = (normalizedPage - 1) * normalizedPageSize;
         var items = await _actionRepository.ListAsync(skip, normalizedPageSize);
         var total = await _actionRepository.CountAsync();
-        return new PagedResult<ActionDto>(items, normalizedPage, normalizedPageSize, total);
+        var totalPages = PagingHelper.CalculateTotalPages(total, normalizedPageSize);
+        return new PagedResult<ActionDto>(items, normalizedPage, normalizedPageSize, total, totalPages);
     }
 
     public async Task<ActionDto> CreateAsync(CreateActionRequest request)
