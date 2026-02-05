@@ -50,6 +50,16 @@ builder.Services.AddSwaggerGen(options =>
 
 });
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 
 // Options + DI
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
@@ -85,6 +95,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Pre"))
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 // Middleware JWT (si quieres excluir swagger dentro del middleware, filtra por path allí)
 app.UseMiddleware<JwtAuthMiddleware>();
