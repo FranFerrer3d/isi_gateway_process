@@ -9,13 +9,13 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddIsiGatewayProcess(this IServiceCollection services)
     {
         services.AddScoped<IHealthService, HealthService>();
-        services.AddScoped<IOrganizationRepository, InMemoryOrganizationRepository>();
+        services.AddScoped<IOrganizationRepository, OrganizationSystemOrganizationRepository>();
         services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<ILocationRepository, InMemoryLocationRepository>();
         services.AddScoped<ILocationService, LocationService>();
         services.AddScoped<IRoleRepository, InMemoryRoleRepository>();
         services.AddScoped<IRoleService, RoleService>();
-        services.AddScoped<IModuleRepository, InMemoryModuleRepository>();
+        services.AddScoped<IModuleRepository, OrganizationSystemModuleRepository>();
         services.AddScoped<IModuleService, ModuleService>();
         services.AddScoped<IActionRepository, InMemoryActionRepository>();
         services.AddScoped<IActionService, ActionService>();

@@ -6,6 +6,7 @@ using IsiGatewayProcess.Services;
 using IsiGatewayProcess.Services.Security;
 
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,7 +53,16 @@ builder.Services.AddSwaggerGen(options =>
 
 // Options + DI
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<OrganizationSystemOptions>(builder.Configuration.GetSection("OrganizationSystem"));
 builder.Services.AddSingleton<IJwtValidator, JwtValidator>();
+builder.Services.AddHttpClient<Repositories.OrganizationSystem.OrganizationSystemApiClient>((sp, client) =>
+{
+    var options = sp.GetRequiredService<IOptions<OrganizationSystemOptions>>().Value;
+    if (!string.IsNullOrWhiteSpace(options.BaseUrl))
+    {
+        client.BaseAddress = new Uri(options.BaseUrl);
+    }
+});
 
 builder.Services.AddIsiGatewayProcess();
 
