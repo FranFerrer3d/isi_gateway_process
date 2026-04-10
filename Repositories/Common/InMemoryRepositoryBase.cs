@@ -4,7 +4,7 @@ namespace IsiGatewayProcess.Repositories.Common;
 
 public class InMemoryRepositoryBase<T>
 {
-    protected readonly ConcurrentDictionary<Guid, T> Store = new();
+    protected static readonly ConcurrentDictionary<Guid, T> Store = new();
 
     public Task<T?> GetAsync(Guid id)
     {

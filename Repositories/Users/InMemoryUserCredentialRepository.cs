@@ -4,17 +4,17 @@ namespace IsiGatewayProcess.Repositories;
 
 public class InMemoryUserCredentialRepository : IUserCredentialRepository
 {
-    private readonly ConcurrentDictionary<Guid, string> _store = new();
+    private static readonly ConcurrentDictionary<Guid, string> Store = new();
 
     public Task<string?> GetPasswordHashAsync(Guid userId)
     {
-        _store.TryGetValue(userId, out var hash);
+        Store.TryGetValue(userId, out var hash);
         return Task.FromResult(hash);
     }
 
     public Task SetPasswordHashAsync(Guid userId, string passwordHash)
     {
-        _store[userId] = passwordHash;
+        Store[userId] = passwordHash;
         return Task.CompletedTask;
     }
 }

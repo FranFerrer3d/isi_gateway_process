@@ -6,7 +6,6 @@ using IsiGatewayProcess.Services;
 using IsiGatewayProcess.Services.Security;
 
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,14 +64,6 @@ builder.Services.AddCors(options =>
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<OrganizationSystemOptions>(builder.Configuration.GetSection("OrganizationSystem"));
 builder.Services.AddSingleton<IJwtValidator, JwtValidator>();
-builder.Services.AddHttpClient<IsiGatewayProcess.Repositories.OrganizationSystem.OrganizationSystemApiClient>((sp, client) =>
-{
-    var options = sp.GetRequiredService<IOptions<OrganizationSystemOptions>>().Value;
-    if (!string.IsNullOrWhiteSpace(options.BaseUrl))
-    {
-        client.BaseAddress = new Uri(options.BaseUrl);
-    }
-});
 
 builder.Services.AddIsiGatewayProcess();
 
@@ -94,7 +85,10 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Pre"))
     });
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseCors("AllowAll");
 
@@ -103,6 +97,12 @@ app.UseMiddleware<JwtAuthMiddleware>();
 
 // Map Controllers
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var workshopSeedService = scope.ServiceProvider.GetRequiredService<IWorkshopSeedService>();
+    await workshopSeedService.SeedAsync();
+}
 
 //// Seed solo en Development
 //if (app.Environment.IsDevelopment())

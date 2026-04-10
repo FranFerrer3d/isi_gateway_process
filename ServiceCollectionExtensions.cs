@@ -8,14 +8,15 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddIsiGatewayProcess(this IServiceCollection services)
     {
+        services.AddSingleton<WorkshopMockDatabase>();
         services.AddScoped<IHealthService, HealthService>();
-        services.AddScoped<IOrganizationRepository, OrganizationSystemOrganizationRepository>();
+        services.AddScoped<IOrganizationRepository, InMemoryOrganizationRepository>();
         services.AddScoped<IOrganizationService, OrganizationService>();
         services.AddScoped<ILocationRepository, InMemoryLocationRepository>();
         services.AddScoped<ILocationService, LocationService>();
         services.AddScoped<IRoleRepository, InMemoryRoleRepository>();
         services.AddScoped<IRoleService, RoleService>();
-        services.AddScoped<IModuleRepository, OrganizationSystemModuleRepository>();
+        services.AddScoped<IModuleRepository, InMemoryModuleRepository>();
         services.AddScoped<IModuleService, ModuleService>();
         services.AddScoped<IActionRepository, InMemoryActionRepository>();
         services.AddScoped<IActionService, ActionService>();
@@ -29,6 +30,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IWorkshopReadService, WorkshopReadService>();
+        services.AddScoped<IWorkshopSeedService, WorkshopSeedService>();
         return services;
     }
 }
